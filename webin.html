@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="konva.min.js"></script>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        //封装一个对象.  对象有圆、圆环、内部文字   以下代码可以封装到JS文件中
+        function CircleText(option){
+            this._init(option);
+        };
+        CircleText.prototype={
+            _init:function(option){
+                this.x=option.x||0;
+                this.y=option.y||0;
+                this.innerRadius=option.innerRadius||0;
+                this.outerRadius=option.outerRadius||0;
+                this.innerStyle=option.innerStyle||'green';
+                this.outerStyle=option.outerStyle||'pink';
+                this.textContent=option.textContent||"canvas";
+                //创建一个组，把圆、外环和文字都加到组内
+                this.group=new Konva.Group({
+                    x:this.x,
+                    y:this.y
+                });
+                //创建圆
+                var innerCircle=new Konva.Circle({
+                    x:0,
+                    y:0,
+                    radius:this.innerRadius,
+                    fill:this.innerStyle,
+                    opacity:.8
+                });
+                this.group.add(innerCircle);
+                //创建圆环
+                var outerRing=new Konva.Ring({
+                    x:0,
+                    y:0,
+                    innerRadius:this.innerRadius,
+                    outerRadius:this.outerRadius,
+                    fill:this.outerStyle,
+                    opacity:.3
+                });
+                this.group.add(outerRing);
+                //创建文本
+                var text=new Konva.Text({
+                    x:0-this.outerRadius,           //文字起始居中的位置
+                    y:-7,                           //文字垂直居中，减去文字高度的一半
+                    width:this.outerRadius*2,         //文字居中的宽度
+                    fill:"#fff",
+                    fontSize: 17,                    //文字大小
+                    text:this.textContent,
+                    align:'center',                 //文字居中
+                    fontStyle:'bold'               //文字加粗
+                });
+                this.group.add(text);
+
+            },
+            addToLayer:function(layer){
+                layer.add(this.group);
+            }
+        };
+        //以上代码可以封装到JS文件中
+    </script>
+
+    <script>
+        var stage=new Konva.Stage({
+            container:"container",
+            width:window.innerWidth,
+            height:window.innerHeight
+        });
+        var centerX=1/2*stage.width();                    //设置中心点
+        var centerY=1/2*stage.height();
+        var bgLayer=new Konva.Layer();
+        stage.add(bgLayer);
+
+
+        var innerRadius=126;
+        var outerRadius=220;
+        var innerCircle=new Konva.Circle({                 //背景内圆
+            x:centerX,
+            y:centerY,
+            radius:126,
+            stroke:"#CCCCCC",
+            strokeWith:4,
+            dash:[10,4]                  //设置虚线，10实线， 4像素空
+        });
+        var outerCircle=new Konva.Circle({                  //背景外圆
+            x:centerX,
+            y:centerY,
+            radius:220,
+            stroke:"#CCCCCC",
+            strokeWith:4,
+            dash:[10,4]
+        });
+        bgLayer.add(innerCircle);
+        bgLayer.add(outerCircle);
+
+        var bgInnerCircle=new CircleText({      //创建背景中心圆
+            x:centerX,
+            y:centerY,
+            innerRadius:66,
+            outerRadius:90,
+            innerStyle:'#727898',
+            outerStyle:'#ECECEC',
+            textContent:'WEB入门'
+        });
+        bgInnerCircle.addToLayer(bgLayer);
+        bgLayer.draw();
+
+        var animateLayer=new Konva.Layer();
+        stage.add(animateLayer);
+        var L2_Group=new Konva.Group({
+            x: centerX,
+            y: centerY
+        });
+        var L3_Group=new Konva.Group({
+            x: centerX,
+            y: centerY
+        });
+        var L2_html5=new CircleText({                    //创建二环的的小圆
+            x:Math.cos(-30*Math.PI/180)*innerRadius,
+            y:Math.sin(-30*Math.PI/180)*innerRadius,
+            innerRadius:30,
+            outerRadius:40,
+            innerStyle:'#FCB430',
+            outerStyle:'#ECECEC',
+            textContent:'HTML5'
+        });
+        L2_html5.addToLayer(L2_Group);
+        var L2_css3=new CircleText({
+            x:Math.cos(170*Math.PI/180)*innerRadius,
+            y:Math.sin(170*Math.PI/180)*innerRadius,
+            innerRadius:30,
+            outerRadius:40,
+            innerStyle:'#F3D0D6',
+            outerStyle:'#ECECEC',
+            textContent:'CSS3'
+        });
+        L2_css3.addToLayer(L2_Group);
+        var L3_JS=new CircleText({                    //创建三环的的小圆
+            x:Math.cos(90*Math.PI/180)*outerRadius,
+            y:Math.sin(90*Math.PI/180)*outerRadius,
+            innerRadius:40,
+            outerRadius:50,
+            innerStyle:'#A4C9F6',
+            outerStyle:'#ECECEC',
+            textContent:'javascript'
+        });
+        L3_JS.addToLayer(L3_Group);
+
+        animateLayer.add(L2_Group);
+        animateLayer.add(L3_Group);
+        animateLayer.draw();
+
+        var rotateAngelPerSecond = 60;//每秒钟设置旋转60
+        //Konva的帧动画系统
+        var animate = new Konva.Animation(function(frame){
+            //每隔一会执行此方法，类似 setInterval
+
+            //timeDiff: 是两帧之间的时间差。是变化的，根据电脑性能和浏览器的状态动态变化。
+            //计算 当前帧需要旋转的角度。
+            var rotateAngle =  rotateAngelPerSecond * frame.timeDiff / 1000;  //上一帧和当前帧的时间差，毫秒。
+
+            L2_Group.rotate( rotateAngle );// 不是弧度，是角度
+
+            //拿到所有二环上的圆的 内部组进行反向旋转
+            L2_Group.getChildren().each(function(item,index){
+                //设置二环上的组进行反向旋转
+                item.rotate(-rotateAngle);
+            });
+
+            //三环逆旋转
+            L3_Group.rotate( -rotateAngle );
+
+            // 三环的子元素进行反向旋转
+            L3_Group.getChildren().each(function(item ,index ){
+                //设置 每个圆形的组进行反向旋转。
+                item.rotate( rotateAngle );//设置元素进行旋转 度数
+            })
+        }, animateLayer);
+        animate.start();//启动动画
+
+
+        //Konva的事件系统，jQuery一样的
+        //给动画层绑定一个鼠标移上去的事件
+        animateLayer.on('mouseover', function(){
+            //设置旋转角度
+            rotateAnglPerSecond = 10; //设置旋转的角度为10度，旋转变慢。
+        });
+
+        //给动画层绑定 mouseout离开的事件。
+        animateLayer.on('mouseout', function(){
+            //当鼠标移开的时候，旋转加快
+            rotateAnglPerSecond = 60; //设置旋转角度为60度，旋转变快
+        });
+
+    </script>
+</body>
+</html>
