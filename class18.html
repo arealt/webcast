@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主题班会</title>
+    <style>
+        html,body,div{
+            margin:0;
+            padding:0;
+        }
+        #contain{
+            width:100%;
+            height:768px;
+        }
+        #game_board{
+            margin:16% auto 0;
+            width:100%;
+            height:50%;
+            position: relative;
+        }
+        #content{
+            text-align: center;
+            font-size:100px;
+            font-weight: 900;
+        }
+        #class_name{
+            font-size:26px;
+            position: absolute;
+            right:100px;
+            bottom:20px;
+        }
+        #dis{
+            margin-left:40%;
+        }
+        i{
+            background-color: #ddd;
+            padding:5px;
+        }
+    </style>
+</head>
+<body>
+<div id="contain" contenteditable="true"><br>
+    <div id="game_board">
+        <div id="content">法制宣传日</div>
+        <div id="class_name">一一一18秋平面设计班</div>
+        <div id="dis">
+            主题字体大小:<input type="range" min="0" step="2" max="220" id="ran"><i id="show"></i>
+            背景颜色:<input type="color" id="col1" value="#FFFFFF">
+            字体颜色:<input type="color" id="col2">
+            小字体颜色:<input type="color" id="col3">
+        </div>
+    </div>
+</div>
+<script>
+    var $=function(id){return document.getElementById(id);}
+    $("game_board").addEventListener("mouseover",function(){
+        $("dis").style.display="block";
+    });
+    $("game_board").addEventListener("mouseout",function(){
+        $("dis").style.display="none";
+    });
+    $("ran").addEventListener("change",function(){
+        console.log($("ran").value);
+        $("show").innerHTML=$("ran").value;
+        $("content").style.fontSize=$("ran").value+"px";
+    })
+    $("col1").addEventListener("change",function(){
+        $("contain").style.backgroundColor=$("col1").value;
+    });
+    $("col2").addEventListener("change",function(){
+        console.log($("col2").value);
+        $("content").style.color=$("col2").value;
+    });
+    $("col3").addEventListener("change",function(){
+        $("class_name").style.color=$("col3").value;
+    })
+</script>
+</body>
+</html>
