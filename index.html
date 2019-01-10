@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>18秋平面设计班</title>
+    <meta name="keywords" content="18秋平面设计班" />
+    <meta name="description" content="18秋平面设计班是个优秀的班级" />
+    <meta content="always" name="referrer">
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="css/basic.css" type="text/css" />
+    <link rel="stylesheet" href="css/main.css" type="text/css" />
+</head>
+<body>
+<header>
+    <div class="header-top w"><img src="https://s2.ax1x.com/2019/01/10/FOqFFf.png" /></div>
+    <div class="header-main w">
+        <div id="logo"><img id="log" src="https://s2.ax1x.com/2019/01/10/FOqVSg.png" style="height:60px;" /></div>
+        <div class="main-nav">
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="activity.html">活动</a></li>
+                <li><a href="works.html">作品</a></li>
+                <li><a href="cadre.html">班干部</a></li>
+                <li><a href="score.html">学习成绩</a></li>
+            </ul>
+        </div>
+        <div class="lean fr"><img src="https://s2.ax1x.com/2019/01/10/FOqAfS.png" style="height:40px;" /></div>
+    </div>
+</header>
+
+<section id="content">
+    <div id="w-slider">
+        <div id="slider">
+            <img src="https://s2.ax1x.com/2019/01/10/FOqSOA.jpg" />
+            <img src="https://s2.ax1x.com/2019/01/10/FObzyd.jpg" />
+            <img src="https://s2.ax1x.com/2019/01/10/FOqCwt.jpg" />
+            <img src="https://s2.ax1x.com/2019/01/10/FOqkY8.jpg" />
+            <img src="https://s2.ax1x.com/2019/01/10/FObxQH.jpg" />
+            <img src="https://s2.ax1x.com/2019/01/10/FOq9eI.jpg" />
+        </div>
+        <div class="slider-ctrl">
+            <span class="slicer-ctrl-left"><</span>
+
+            <span class="slicer-ctrl-right">></span>
+        </div>
+    </div>
+</section>
+<footer>
+    友情链接:<a href="https://ke.qq.com/">腾讯课堂</a>
+    <a href="https://fanyi.baidu.com/?aldtype=16047#auto/zh">百度翻译</a>
+    <a href="https://pan.baidu.com/">百度网盘</a>
+</footer>
+<script src="js/animate.js"></script>
+<script>
+    var w_slider=document.getElementById("w-slider");
+    var slider=document.getElementById("slider");
+    var imgs=slider.children;
+    var slider_ctrl=document.getElementById("w-slider").children[1];
+    var mWidth=imgs[0].clientWidth;;
+    //添加span
+    for(var i=0;i<imgs.length;i++){
+        var span=document.createElement("span");
+        span.innerHTML=imgs.length-i;
+        span.className="slicer-ctrl-con";
+        slider_ctrl.insertBefore(span,slider_ctrl.children[1]);
+    }
+    var spans=slider_ctrl.children;
+    spans[1].setAttribute("class","slicer-ctrl-con current");
+    //console.log()mWidth;
+    for(var i=1;i<imgs.length;i++){
+        imgs[i].style.left=mWidth+"px";    //把（除第一张）其他图片放到轮播框的右边
+    }
+    //console.log(spans.length);
+    var j=0;         //记录点击前显示的图片索引
+    for(var k in spans){
+        spans[k].onclick=function(){
+            // console.log(this.className);
+            if(this.className=="slicer-ctrl-left"){
+                //console.log("left");
+                animate(imgs[j],{left:mWidth});
+                --j<0?j=imgs.length-1:j;
+                imgs[j].style.left=-mWidth+"px";
+                animate(imgs[j],{left:0});
+                setSquare()
+            }else if(this.className=="slicer-ctrl-right"){
+                // console.log("right");
+                toRight();
+            }else{
+                var that=this.innerHTML-1;
+                //console.log(this.innerHTML);
+                if(j<that){
+                    animate(imgs[j],{left:-mWidth});
+                    j=that;
+                    imgs[j].style.left=mWidth+"px";
+                    animate(imgs[j],{left:0});
+                    setSquare()
+                }else if(j>that){
+                    animate(imgs[j],{left:mWidth});
+                    j=that;
+                    imgs[j].style.left=-mWidth+"px";
+                    animate(imgs[j],{left:0});
+                    setSquare()
+                }else{
+                    j=this.innerHTML-1;
+                }
+            }
+        }
+    }
+    function toRight(){
+        animate(imgs[j],{left:-mWidth});
+        ++j>imgs.length -1?j=0:j;
+        imgs[j].style.left=mWidth+"px";
+        animate(imgs[j],{left:0});
+        setSquare();
+    }
+    function setSquare(){                             //设置小方块跟着变色
+        for(var i=1;i<spans.length-1;i++){
+            spans[i].className="slicer-ctrl-con";
+        }
+        spans[j+1].setAttribute("class","slicer-ctrl-con current");
+    }
+    var timer=null;
+    timer=setInterval(toRight,5000);                   //设置自动播放
+    w_slider.onmouseover=function(){                 //鼠标放上时不播放
+        clearInterval(timer);
+    }
+    w_slider.onmouseout=function(){                 //鼠标离开时，自动播放
+        timer=setInterval(toRight,5000);
+    }
+
+</script>
+<script>
+    function $(id){return document.getElementById(id);}
+    console.log(1);
+
+
+</script>
+
+
+
+
+
+<body>
